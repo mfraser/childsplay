@@ -122,7 +122,7 @@ class Fish(SPSpriteUtils.SPSprite):
                 self.image = self.image_0
             else:
                 self.image = self.image_1
-            status = self.moveit.next()
+            status = next(self.moveit)
             if status != -1:# reached the end of the movement
                 if self.parent.are_we_in_aquarium_mode():
                     # special behaviour, fish turns each time it reaches the end
@@ -314,7 +314,7 @@ class Activity:
             for imgfile in rawimagelist:
                 self.imagelist.append((utils.load_image(imgfile[0]),\
                                    utils.load_image(imgfile[1])))
-        except Exception,info:
+        except Exception as info:
             self.logger.exception("Error loading images")
             raise utils.MyError()
         self.logger.debug("constructed %s groups of images" % len(self.imagelist))

@@ -503,7 +503,7 @@ class Activity:
         self.ball1.display_sprite()
         Misc.actives.add(self.ball1)
         Misc.group.add(self.ball1)
-        print "level", self.level
+        print("level", self.level)
         # Now it has level 2 repeated in level 3. Before it was (if level == 1), (if level > 1), (if level > 2).
         if self.level == 1:
             # set points to earn: just d(b1,h)/8 in this case

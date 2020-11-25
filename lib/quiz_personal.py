@@ -69,13 +69,13 @@ class Activity(quiz.Activity):
         self.rchash = utils.read_rcfile(os.path.join(self.my_datadir, 'quiz_personal.rc'))
         self.rchash['theme'] = self.theme
         self.rchash['lang'] = self.lang
-        print self.rchash
+        print(self.rchash)
     
     def _start_engine(self):
         try:
             self.quizengine = quiz.Engine('personal', self.SPG, \
                                                   self.observer, self.rchash)
-        except Exception, info:
+        except Exception as info:
             self.logger.exception("error starting quiz engine: %s" % info)
             self.SPG.tellcore_info_dialog(str(info))
             

@@ -286,7 +286,7 @@ class Activity:
         y_offset = self.snd_img.get_height() + 16
         # shuffle sounds
         random.shuffle(self.all_sounds_files)
-        num = (r * c)/2
+        num = int((r * c)/2)
         files = self.all_sounds_files[:num] * 2
         self.num_of_buttons = len(files)
         self.levelupcount = 1
@@ -383,13 +383,13 @@ class Activity:
             self.actives.update(item)# Check all objects in group for callback function
         except:
             self.logger.exception("Unhandled exception")
-            raise StandardError
+            raise Exception
         # check if there objects left in the sprite group
         if not self.actives.sprites():
             # we call the SPGoodies observer to notify the core the level
             # is ended and we want to store the collected data
             num = 0
-            for n in Global.selected_cards.values():
+            for n in list(Global.selected_cards.values()):
                 num += n
             # store into dbase
             self.db_mapper.insert('knownsounds',num)

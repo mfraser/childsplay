@@ -308,7 +308,7 @@ class Activity:
         # load all the images we need
         try:
             imgdir = os.path.join(self.my_datadir, self.tile, self.theme)
-            if self.rchash.has_key(self.theme):
+            if self.theme in self.rchash:
                 cardfront = self.rchash[self.theme]['cardfront']
             else:
                 cardfront = self.rchash['childsplay']['cardfront']
@@ -327,7 +327,7 @@ class Activity:
                 # The B file
                 img = utils.load_image(imgfile.replace('A','B', 1))
                 imagelist.append((img,file[:-5]))
-        except (StandardError,utils.MyError),info:
+        except (Exception,utils.MyError) as info:
             self.logger.exception("Can't load images for sprites: %s" % info)
             raise utils.MyError(str(info))# MyError will make the core end this game
         else:
@@ -471,7 +471,7 @@ class Activity:
                     # a lower value would be better, ideally a number equal to
                     # the number of cards would be a perfect score.
                     num = 0
-                    for n in Global.selected_cards.values():
+                    for n in list(Global.selected_cards.values()):
                         num += n
                     # store into dbase
                     self.db_mapper.insert('knowncards',num)

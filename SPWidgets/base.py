@@ -23,7 +23,7 @@ import os
 import types
 import subprocess
 import glob
-import ConfigParser
+import configparser
 from SPConstants import *
 import logging 
 module_logger = logging.getLogger("childsplay.SPWidgets")
@@ -36,7 +36,7 @@ def Init(theme):
     global THEME,  WEHAVEAUMIX
     module_logger.debug('Init called with:%s' % theme)
     # theme is used by the widgets
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     rc = os.path.join( GUITHEMESPATH, theme, 'SPWidgets.rc')
     if not os.path.exists(rc):
         module_logger.info('theme file %s does not exists' % rc)
@@ -48,7 +48,7 @@ def Init(theme):
     module_logger.debug("Using rc file %s" % rc)
     d = {}
     config.read(rc)
-    for k, v in dict(config.items('default')).items():
+    for k, v in list(dict(config.items('default')).items()):
         try:
             d[k] = eval(v, {'__builtins__': None}, {})
         except NameError:
@@ -65,12 +65,12 @@ def Init(theme):
                               stdout=subprocess.PIPE,\
                               stderr=subprocess.PIPE)
         output = cmd.communicate()[0]
-    except Exception, info:
+    except Exception as info:
         module_logger.warning("program 'amixer' not found, unable to set volume levels: %s" % info)
         WEHAVEAUMIX = False
     else:
-        for line in output.split('\n'):
-            if "%]" in line:
+        for line in output.split(b'\n'):
+            if b"%]" in line:
                 volume_level = line.split("%]")[0].split("[")[1]
         WEHAVEAUMIX = volume_level
     return THEME

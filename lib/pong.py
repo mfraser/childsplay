@@ -94,7 +94,7 @@ class PcPlayer:
     def __init__(self, rc_dic):
         """bat must be a Bat class object."""
         self.up,self.down = ord(Misc.bat_l.up),ord(Misc.bat_l.down)
-        self.u_up,self.u_down = unicode(Misc.bat_l.up), unicode(Misc.bat_l.down)
+        self.u_up,self.u_down = str(Misc.bat_l.up), str(Misc.bat_l.down)
         self.batstarty = Misc.bat_l.rect[1]
         self.balldirection = Misc.ball.xoffset
         self.event_dict = {'key':self.up,'unicode':self.u_up}
@@ -290,9 +290,9 @@ class Bat(SPSpriteUtils.SPSprite):
         for event in Misc.events:
             if event.type == KEYDOWN:
                 try:
-                    c = event.unicode.upper()
-                except ValueError,info:
-                    print info
+                    c = event.str.upper()
+                except ValueError as info:
+                    print(info)
                     return
                 else:
                     if c == self.up:
@@ -524,17 +524,17 @@ class Activity:
         
         lspeed,rspeed = 8,8
         try:
-            u = unicode(self.rc_dic['right_keyup'])
-            d = unicode(self.rc_dic['right_keydown'])
+            u = str(self.rc_dic['right_keyup'])
+            d = str(self.rc_dic['right_keydown'])
         except (TypeError,KeyError):
-            u,d = u'p',u'l'
+            u,d = 'p','l'
         Misc.bat_r = Bat(self.rc_dic, action_keys=(u,d),speed=rspeed)# to keep a reference to the bat, see class Ball
         Misc.bat_r.set_position((768,220))
         try:
-            u = unicode(self.rc_dic['left_keyup'])
-            d = unicode(self.rc_dic['left_keydown'])
+            u = str(self.rc_dic['left_keyup'])
+            d = str(self.rc_dic['left_keydown'])
         except (TypeError,KeyError):
-            u,d = u'q',u'a'
+            u,d = 'q','a'
         Misc.bat_l = Bat(self.rc_dic, action_keys=(u,d),speed=lspeed)
         
         if ONEPLAYER:

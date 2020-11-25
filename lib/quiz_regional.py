@@ -73,7 +73,7 @@ class Activity(quiz.Activity):
         try:
             self.quizengine = quiz.Engine('regional', self.SPG, \
                                                   self.observer, self.rchash)
-        except Exception, info:
+        except Exception as info:
             self.logger.exception("error starting quiz engine: %s" % info)
             self.SPG.tellcore_info_dialog(str(info))
             

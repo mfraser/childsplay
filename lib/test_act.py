@@ -29,7 +29,7 @@ module_logger = logging.getLogger("childsplay.test_act")
 # standard modules you probably need
 import os
 import sys
-print sys.path
+print(sys.path)
 # Now python finds the pygame 1.9 package first.
 # It's ignored when there's no such path
 import pygame
@@ -94,7 +94,7 @@ class Capture(object):
         if not os.path.isdir(capture_path):
             os.mkdir(capture_path)
         filename = os.path.join(capture_path, str(self.SPG.get_current_user_id()) + ".png")
-        print "Filename: ", filename
+        print("Filename: ", filename)
         pygame.image.save(self.snapshot, filename)
         #self.screen.blit(self.snapshot, self.blit_pos)
         #pygame.time.wait(1500)

@@ -345,7 +345,7 @@ class WordCompleter:
             self._firstletter = None
         else:
             self._firstletter = c.lower()
-    
+
     def get_answers(self, part, max=0):
         """Get suggestions from the wordlist based on the string @part.
         part is the partial string.
@@ -405,7 +405,7 @@ if __name__ == '__main__':
 #    f.close()
     wordlist = []
     wc = WordCompleter(wordlist)
-    print wc.get_answers('aa')
+    print(wc.get_answers('aa'))
     
     import pygame
     from pygame.constants import *
@@ -427,7 +427,7 @@ if __name__ == '__main__':
     SPWidgets.Init('braintrainer')
     
     def cbf(parent, data):
-        print "cbf called with: ", parent, data
+        print("cbf called with: ", parent, data)
     
     kb = None
     for layout in ('qwerty', 'qwerty_square','numbers', 'abc', 'abc_square'):

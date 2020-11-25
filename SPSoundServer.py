@@ -32,7 +32,7 @@ class SoundServer:
     """ Threaded soundserver which plays the files placed on the queue.
     It checks for the existence of the file and when it doesn't exists it will
     be removed from the queue and a error message will be placed in the logs.
-     """         
+     """
     server_allready_running = False
     def __init__(self, sleep=0.2):
         """ This will start the server, the sleep value is the time the server
@@ -49,7 +49,7 @@ class SoundServer:
         self.serverping = False
         self.stopplaying = False
         self.start_server()
-                        
+
     def __del__(self):
         try:
             self.stop_server(0)
@@ -65,7 +65,7 @@ class SoundServer:
                 self.thread = Thread(target=self._start_server)
                 self.thread.start()
                 time.sleep(0.1)
-            except Exception,info:
+            except Exception as info:
                 self.logger.exception("SoundServer startup problem")
                 self.serverstatus = False
                 self.server_allready_running = False
@@ -74,7 +74,7 @@ class SoundServer:
                 self.server_allready_running = True
 
     def stop_server(self,s=1):
-        """ Stops a running server, after one second(default). 
+        """ Stops a running server, after one second(default).
         The delay is for stuff to finish, you can use stop_server(0) to stop now."""
         if not hasattr(self,"thread") or self.workingserver == 0:
             return
@@ -104,18 +104,18 @@ class SoundServer:
         #self.logger.debug("placed %s on the queue" % file)
         self.queue.insert(0, file)# The server checks the stack for messages
         return
-    
+
     def clear_queue(self):
         """Clears the queue, useful when you want to interrupt the playing and
         play a new file."""
         self.queue = []
-    
+
     def stop(self):
         """Stops the music but leaves the server running."""
         pygame.mixer.music.stop()
         self.stopplaying = True
         #self.queue = []
-    
+
     def ping_server(self):
         """ Use this to test if the server is running.
         This actually sends a message to the server and the server signals
@@ -126,14 +126,14 @@ class SoundServer:
         self.queue.insert(0,("PING", utils.NoneSound))
         time.sleep(0.5)
         self.logger.debug("result of ping_server:%s" % self.serverping)
-        if self.serverping: 
+        if self.serverping:
             return True
-        else: 
+        else:
             return False
 
     def _start_server(self):
         """ This runs in a seperate thread and plays the sound object from the queue
-        in a seperate thread also. Don't call this method, it is called from the class 
+        in a seperate thread also. Don't call this method, it is called from the class
         constructor."""
         while self.workingserver:
             try:
@@ -148,7 +148,7 @@ class SoundServer:
                     if msg:
                         if msg == "PING":
                             self.logger.debug("server pinged: running")
-                            self.serverping = True                    
+                            self.serverping = True
                         else:
                             while pygame.mixer.music.get_busy():
                                 if self.stopplaying:
@@ -162,7 +162,7 @@ class SoundServer:
                                 #self.logger.debug("playing: %s" % msg)
                                 pygame.mixer.music.load(msg)
                                 pygame.mixer.music.play()
-                        
+
                 time.sleep(self.sleep)
             except:
                 self.logger.exception("Troubles in server thread, stopping server.")
@@ -173,28 +173,28 @@ class SoundServer:
         except:
             pass
         self.logger.debug("Server stopped")
-                
+
 
 if __name__ == '__main__':
-    
+
     import __builtin__
     __builtin__.__dict__['_'] = lambda x:x
-    
+
     import SPLogging
     SPLogging.set_level('debug')
     SPLogging.start()
-        
+
     import pygame
     from pygame.constants import *
-    pygame.init()    
+    pygame.init()
     scr = pygame.display.set_mode((100, 100))
-    
+
     ss = SoundServer()
     ss.play("test.ogg")
     ss.ping_server()
     ss.play("test.ogg")
-    
-    runloop = 1 
+
+    runloop = 1
     while runloop:
         pygame.time.wait(500)
         pygame.event.pump()
@@ -202,9 +202,9 @@ if __name__ == '__main__':
         for event in events:
             if event.type is KEYDOWN:
                 if event.key == K_ESCAPE:
-                    print "escape hit, stopping main"
+                    print("escape hit, stopping main")
                     runloop = 0
-        print "main doing stuff"
-    
+        print("main doing stuff")
+
     ss.stop_server(0)
     raw_input("hit any key to quit")

@@ -92,21 +92,21 @@ class birthday:
 
 if __name__ == '__main__':
     
-    import __builtin__
-    __builtin__.__dict__['_'] = lambda x:x
+    import builtins
+    builtins.__dict__['_'] = lambda x:x
     
-    import SPLogging
+    from . import SPLogging
     SPLogging.set_level('debug')
     SPLogging.start()
     
     pygame.init()
     
-    from SPSpriteUtils import SPInit
+    from .SPSpriteUtils import SPInit
     
     def cbf(sprite, event, data=''):
-        print 'cb called with sprite %s, event %s and data %s' % (sprite, event, data)
-        print 'sprite name: %s' % sprite.get_name()
-        print 'data is %s' % data
+        print('cb called with sprite %s, event %s and data %s' % (sprite, event, data))
+        print('sprite name: %s' % sprite.get_name())
+        print('data is %s' % data)
     
     scr = pygame.display.set_mode((800, 600))
     scr.fill(GREY90)

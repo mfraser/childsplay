@@ -17,11 +17,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from base import *
-from buttons import *
-from dialogs import *
-from funcs import *
-from text import *
+from .base import *
+from .buttons import *
+from .dialogs import *
+from .funcs import *
+from .text import *
 
 from SPConstants import NoGtk
 if not NoGtk:

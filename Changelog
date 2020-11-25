@@ -1,3 +1,6 @@
+childsplay (3.4):
+    * Started work on converting to Python 3
+
 childsplay (3.3):
     * Fixed #53772 childsplay: 1+1 =2 quiz not working
     * Fixed #53771 childsplay: backgroundimage / splashimage is hardcoded

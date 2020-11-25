@@ -152,7 +152,7 @@ class Menu:
                     pos = (x, y)
                 else:
                     pos = t[2]
-                print t
+                print(t)
                 if t[4]:
                     try:
                         txt = getattr(acttext, t[3])
@@ -173,7 +173,7 @@ class Menu:
                 if x > max_x - b.get_sprite_width():
                     x = 50
                     y += 140
-                if buttons.has_key(k):
+                if k in buttons:
                     buttons[k].append(b)
                 else:
                     buttons[k] = [b]
@@ -251,9 +251,9 @@ class Activity:
         p = os.path.join(theme_dir, xmlname)
         try:
             Pm = ParseMenu(p)
-        except Exception, info:
+        except Exception as info:
             self.logger.exception("Error while parsing menu xml file: %s" % p)
-            raise utils.MyError, info
+            raise utils.MyError(info)
         self.menu = Pm.get_menu()
         self.menudefault = Pm.get_menudefault()
     
@@ -262,9 +262,9 @@ class Activity:
         try:
             self.Mn = Menu(p, self.menu, self.menu_callback, theme_rc, lang, self.menudefault, \
                            removeables=self.removeables)
-        except Exception, info:
+        except Exception as info:
             self.logger.exception("Error while constructing the menu buttons")
-            raise utils.MyError, info
+            raise utils.MyError(info)
         
     def _remove_buttons(self, buttons):
         #self.logger.debug("_remove_buttons called with:%s" % buttons)
@@ -277,7 +277,7 @@ class Activity:
     def _display_buttons(self, menubuttons):
         if len(menubuttons) == 0:
             self.logger.error("No buttons found to display")
-            raise utils.MyError, "No buttons found to display, check your install"
+            raise utils.MyError("No buttons found to display, check your install")
             return
         if menubuttons == self.displayed_bottom_buttons:
             refresh = False
@@ -292,7 +292,7 @@ class Activity:
     def menu_callback(self, sprite, event, data):
         #self.logger.debug('menu_callback called with sprite %s, event %s and data %s' % (sprite, event, data))
         pygame.time.wait(200)
-        if type(data[0]) not in types.StringTypes:
+        if type(data[0]) not in (str,):
             self.logger.debug("menu cbf data is object list")
             if self.selected_button:
                 self.selected_button.unselect()

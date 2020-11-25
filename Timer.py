@@ -31,8 +31,8 @@ module_logger = logging.getLogger("childsplay.Timer")
 # logfile. (especially with find_char_sound)
 class Worker(threading.Thread):
     """Thread object internally used and called by Timer.
-    Don't use this directly, use Timer.""" 
-    
+    Don't use this directly, use Timer."""
+
     def __init__(self, delay=None, func=None, fargs=None, loop=1, lock=None, cb_func=None, now=False):
         self.logger = logging.getLogger("childsplay.Timer.Worker")
         threading.Thread.__init__(self)
@@ -46,7 +46,7 @@ class Worker(threading.Thread):
         self.__cb_func = cb_func
         self.__now = now
         atexit.register(self._stop)
-        
+
     def __sleep(self, secs):
         """Sleep fuction that checks every tenth of a second to see if we should die"""
         while secs > 0:
@@ -58,12 +58,12 @@ class Worker(threading.Thread):
                 continue
             time.sleep(0.1)
             secs -= 0.1
-    
+
     def run(self, now=False):
         """This overrides the threading.Thread.run method."""
         #self.logger.info("Timer started")
         if self.__now:
-            apply(self.__func, self.__fargs)
+            self.__func(*self.__fargs)
         while self.__do:
             if self.__die:
                 break
@@ -79,7 +79,7 @@ class Worker(threading.Thread):
                     # this is done because when we call _stop when we in time.sleep
                     # the __func will set it back and the thread will never die.
                     break
-                self.__do = apply(self.__func, self.__fargs)
+                self.__do = self.__func(*self.__fargs)
             except Exception:
                 self.logger.exception("Timer stopped due to an exception in %s" % self.__func)
                 self.__do = 0
@@ -245,21 +245,21 @@ if __name__ == '__main__':
     def test( *args):
         global i
         i += 1
-        print i, "message from test"
+        print(i, "message from test")
         if args: 
-            print "args from test", args
+            print("args from test", args)
         return 1
         
     t = Timer(1, test, ('these are the args', ), loop=60)
-    print "Start timer (60 times)"
+    print("Start timer (60 times)")
     t.start()
     while i < 60:
         pass
-    print "wait 2 seconds"
+    print("wait 2 seconds")
     time.sleep(2)
-    print "and do some stuff in main"
-    print "wait another 2 secs"
+    print("and do some stuff in main")
+    print("wait another 2 secs")
     time.sleep(2)
-    print "and now stop the timer"
+    print("and now stop the timer")
     t.stop()
     

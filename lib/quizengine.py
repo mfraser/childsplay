@@ -248,8 +248,8 @@ class ContentFeeder:
 #        session.close()
         ###################################################
         i = row.CID
-        print row
-        print row.CID
+        print(row)
+        print(row.CID)
         bad = ('\t', '\r', '\n')
         rq = ''.join(c for c in row.question if c not in bad).strip()
         ra = ''.join(c for c in row.answer if c not in bad).strip()
@@ -308,7 +308,7 @@ class ContentFeeder:
     def set_exercise_result(self, id, result):
         """Called by Engine._notify_obs"""
         self.logger.debug("set_exercise_result called with id:%s result:%s" % (id, result))
-        if self.served_dict.has_key(id):
+        if id in self.served_dict:
             self.served_dict[id] = (self.served_dict[id][0], result)
             if result:
                 orm, session = self.SPG.get_orm('served_content', 'user')
@@ -321,7 +321,7 @@ class ContentFeeder:
     
     def have_wrong_exercise(self):
         self.wrongexercises = []
-        for k, v in self.served_dict.items():
+        for k, v in list(self.served_dict.items()):
             if not v[1]:
                 self.WehaveWrong = True
                 self.wrongexercises.append((v[0], k))
@@ -348,7 +348,7 @@ class AudioPlayer:
             return
         else:
             self.wehaveaudio = True
-        keys = audio.keys()
+        keys = list(audio.keys())
         try:
             self.audiolist = [audio['silence_1000']]
             self.audiolist.append(audio['question'])
@@ -359,7 +359,7 @@ class AudioPlayer:
                 self.audiolist.append(ad_audio[ad_k][0])
                 self.audiolist.append(audio['silence_500'])
                 self.audiolist.append(audio[k])
-        except (AttributeError, IndexError), info:
+        except (AttributeError, IndexError) as info:
             self.logger.warning("%s" % info)
             self.wehaveaudio = False
     
@@ -470,7 +470,7 @@ class Engine:
         self.quiz = quiz
         try:
             self.CF = ContentFeeder(dbpath, 1, quiz, rchash, spgoodies)
-        except Exception, info:
+        except Exception as info:
             self.logger.exception("Failed to start contentfeeder: %s" % info)
             raise MyError
         self.whatarewe = self.CF._get_kind()
@@ -571,7 +571,7 @@ class Engine:
         self.logger.debug("loading logo %s" % p)
         try:
             self.logo_sprite = SPSprite(load_image(p))
-        except Exception, info:
+        except Exception as info:
             self.logger.debug("No logo found for %s" % self.quiz)
             self.logo_sprite = None
         if self.quiz == 'picture':
@@ -624,7 +624,7 @@ class Engine:
             self.snd_button.display_sprite()
         try:
             self.current_question_id = self.CF.served[1]
-        except IndexError, info:
+        except IndexError as info:
             self.logger.error(info)
             # this shouldn't happen
             self.current_question_id = -1
@@ -647,7 +647,7 @@ class Engine:
             self.snd_button.erase_sprite()
         try:
             self.current_question_id = self.CF.served[0]
-        except IndexError, info:
+        except IndexError as info:
             self.logger.error(info)
             self.current_question_id = -1
     
@@ -801,7 +801,7 @@ class Engine:
         if self.CF.get_num_questions() < 10:
             self.logger.error("To little questions found in %s for locale '%s', found %s questions should be at least 10" % (self.quiz, self.lang, self.CF.get_num_questions()))
             self.SPG.tellcore_info_dialog( _("To little questions found in %s for locale '%s', found %s questions should be at least 10"% (self.quiz, self.lang, self.CF.get_num_questions())))
-            raise ParserError,"To little questions found in %s for locale '%s', found %s questions should be at least 10" % (self.quiz, self.lang, self.CF.get_num_questions())
+            raise ParserError("To little questions found in %s for locale '%s', found %s questions should be at least 10" % (self.quiz, self.lang, self.CF.get_num_questions()))
         
         self.answers = answers
         if not maxtimes:
@@ -899,7 +899,7 @@ class Engine:
         # We will play the question but no answers
         audiohash['question'] = os.path.join(self.content_sndpath, audio)
         speakerID = exer['speakerID']
-        if self.audiohash.has_key(speakerID):
+        if speakerID in self.audiohash:
             ad_audiohash = self.audiohash[speakerID]
         if audio:
             self.wehaveaudio = True

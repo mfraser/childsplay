@@ -26,7 +26,7 @@ import logging
 
 import glob
 import zlib
-from SPConstants import *
+from .SPConstants import *
 
 if NoGtk:
     try:
@@ -75,7 +75,7 @@ def check_tables(dbase):
         tp = os.path.basename(f).split('_')[1][:-4]
         path_types[f] = tp + '_%s' % lang
     
-    for t in path_types.values():
+    for t in list(path_types.values()):
         if t not in tl:
             logger.debug("Creating table '%s'" % t)
             # group is named _group as group is a reserved word in sqlite3
@@ -89,7 +89,7 @@ def check_tables(dbase):
                     data TEXT, year TEXT, _group TEXT) 
                     ''' % t)
             con.commit()
-            for p, pt in path_types.items():
+            for p, pt in list(path_types.items()):
                 if pt == t:
                     break
             if parse_xml(p, cursor, t):
@@ -250,7 +250,7 @@ def parse_xml(xml, cursor, tname):
                 hash['year'] = e.text
             except:
                 hash['year'] = ''           
-        except AttributeError, info:
+        except AttributeError as info:
             logger.error("The content.xml is badly formed, missing element(s):%s,%s" % (info, e))
             logger.error("question '%s' will be removed from the collection" % q.get('id'))
         else:
@@ -267,7 +267,7 @@ def parse_xml(xml, cursor, tname):
     return True
     
 if __name__ == '__main__':
-    import SPLogging
+    from . import SPLogging
     SPLogging.set_level('debug')
     SPLogging.start()
     

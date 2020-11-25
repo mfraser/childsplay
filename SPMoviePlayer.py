@@ -19,10 +19,10 @@
 
 import pygame
 from pygame.constants import *
-from SPWidgets import Button, Label
+from .SPWidgets import Button, Label
 import logging
-from SPColors import *
-from SPSpriteUtils import SPSprite
+from .SPColors import *
+from .SPSpriteUtils import SPSprite
 
 class MoviePlayer:
     def __init__(self, file, actives, rect, observer, hidebuttons=False):
@@ -114,20 +114,20 @@ class MoviePlayer:
 
 if __name__ == '__main__':
     
-    import __builtin__
-    __builtin__.__dict__['_'] = lambda x:x
+    import builtins
+    builtins.__dict__['_'] = lambda x:x
     
-    import SPLogging
+    from . import SPLogging
     SPLogging.set_level('debug')
     SPLogging.start()
     
-    from SPWidgets import Init
+    from .SPWidgets import Init
     
     import pygame
     from pygame.constants import *
     pygame.init() 
     
-    from SPSpriteUtils import SPInit
+    from .SPSpriteUtils import SPInit
  
     scr = pygame.display.set_mode((800, 600))
     back = scr.convert()
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     
     def observer(state):
         global runloop
-        print "observer called with state", state
+        print("observer called with state", state)
         if state == 'stop':
             runloop = 0
     
@@ -159,7 +159,7 @@ if __name__ == '__main__':
         for event in events:
             if event.type is KEYDOWN:
                 if event.key == K_ESCAPE:
-                    print "escape hit, stopping loop"
+                    print("escape hit, stopping loop")
                     runloop = 0
             actives.update(event)
         r = scr.blit(msurf, mppos)

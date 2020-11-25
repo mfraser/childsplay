@@ -67,7 +67,7 @@ class Img_Display(SPSpriteUtils.SPSprite):
         self.wrongpos_y = 320
                 
     def show_hint(self, widget, event, data):
-        k, r = random.choice(self.RectHash.items())
+        k, r = random.choice(list(self.RectHash.items()))
         Img_Display.points -= 1
         if Img_Display.points < 0:
             Img_Display.points = 0
@@ -94,7 +94,7 @@ class Img_Display(SPSpriteUtils.SPSprite):
         self.wrongpos_y = wrongpos_y
         pygame.display.update(pygame.draw.rect(self.image, RED, r.inflate(-self.offset, -self.offset), 10))
         self.display_sprite()
-        if self.RectHash.has_key(k):
+        if k in self.RectHash:
             del self.RectHash[k]
         
     def callback(self,sprite,event,*args):
@@ -322,15 +322,15 @@ class Activity:
         self.ImgDiffList = []
         try:
             lines = open(p % level, 'r').readlines()
-        except IOError, info:
-            raise utils.MyError, info
+        except IOError as info:
+            raise utils.MyError(info)
         for line in lines:
             k, v = line[:-1].split(';',1)
             try:
                 self.ImgDiffHash[os.path.join(self.imgdir, k)] = \
                                 [pygame.Rect(eval(x,{'__builtins__': None},\
                                 {'True':True,'False':False})) for x in v.split(':')]
-            except SyntaxError, info:
+            except SyntaxError as info:
                 self.logger.error('Badly formed rect line in %s; %s' % (p % level, line))
         self.LevelScoreHash = {1:3, 2:3, 3:3, 4:3, 5:3, 6:3}
         
@@ -461,7 +461,7 @@ class Activity:
         else:
             y = 110
         
-        k = random.choice(self.ImgDiffHash.keys())
+        k = random.choice(list(self.ImgDiffHash.keys()))
         
         v = self.ImgDiffHash[k]
         del self.ImgDiffHash[k]

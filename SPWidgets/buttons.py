@@ -23,10 +23,10 @@ import types
 import glob
 import pygame
 from pygame.constants import *
-from base import Widget
+from .base import Widget
 from SPConstants import *
-from text import Label
-from funcs import get_boxes, make_button_bg_dynamic
+from .text import Label
+from .funcs import get_boxes, make_button_bg_dynamic
 from SPSpriteUtils import SPSprite, SPGroup
 
 class RadioButton(Widget):
@@ -71,21 +71,21 @@ class RadioButton(Widget):
         self.connect_callback(self._cbf_on_select, MOUSEBUTTONUP)
     
     def _rb_select(self):
-        print 'selecting:', self.name
+        print('selecting:', self.name)
         self.image = self.selected_image
         self.moveto(self.image_pos)
         self._rb_selected = True
         self.display_sprite()
     
     def _rb_unselect(self):
-        print 'unselecting:', self.name
+        print('unselecting:', self.name)
         self.image = self.box
         self.moveto(self.box_pos)
         self._rb_selected = False
         self.display_sprite()
     
     def _cbf_on_select(self, *args):
-        print "_cbf %s: selection = %s" % (self.name, self._rb_selected)
+        print("_cbf %s: selection = %s" % (self.name, self._rb_selected))
         if self._rb_selected:
             self._rb_unselect()
         else:
@@ -114,13 +114,13 @@ class Button(Widget):
         kwargs - bgcol, fgcol
         """
         Widget.__init__(self)
-        if kwargs.has_key('fgcol'):
+        if 'fgcol' in kwargs:
             fgcol = kwargs['fgcol']
         else:
             fgcol = self.THEME['button_fg_color']
         self.kwargs = kwargs
         self.ImSelected = False
-        if type(txt) in (types.StringType, types.UnicodeType):
+        if type(txt) in (bytes, str):
             s = utils.char2surf(txt, fcol=fgcol, fsize=fsize, ttf=TTF, bold=fbold)
             r = s.get_rect()
             r.w += padding*2
@@ -130,7 +130,7 @@ class Button(Widget):
             r = s.get_rect()
             r.w += padding*2
             r.h += padding*2
-        if kwargs.has_key('maxlength') and r.w > kwargs['maxlength']:
+        if 'maxlength' in kwargs and r.w > kwargs['maxlength']:
             r.w = kwargs['maxlength']
         self.pos = pos
         self.padding = padding
@@ -139,7 +139,7 @@ class Button(Widget):
         self._setup(s)
         
     def _setup(self, s):
-        if self.kwargs.has_key('bgcol'):
+        if 'bgcol' in self.kwargs:
             bgcol = self.kwargs['bgcol']
         else:
             bgcol = self.THEME['button_bg_color']
@@ -196,7 +196,7 @@ class ImgButton(Button):
         padding - space in pixels around the text
         name - string to indicate this object
         """
-        if type(path) in types.StringTypes:
+        if type(path) in (str,):
             image = utils.load_image(path)
         else:
             image = path
@@ -214,7 +214,7 @@ class ImgTextButton(ImgButton):
         text - text to display. String will be split on \n.
         textpos - position of the text, 1 means left from the image, 2 means right from the image
         """
-        if type(path) in types.StringTypes:
+        if type(path) in (str,):
             image = utils.load_image(path)
         else:
             image = path
@@ -261,12 +261,12 @@ class TransImgButton(ImgButton):
         """
         self.text = text
         self.fsize = fsize
-        if type(path) in types.StringTypes:
+        if type(path) in (str,):
             image = utils.load_image(path)
         else:
             image = path
         if hpath:
-            if type(hpath) in types.StringTypes:
+            if type(hpath) in (str,):
                 self.hs = utils.load_image(hpath)
             else:
                 self.hs = hpath
@@ -400,7 +400,7 @@ class ImgButtonDynamic(ButtonDynamic):
             supported size names are: '36px','54px','81px'.
         name - string to indicate this object
         """
-        if type(path) in types.StringTypes:
+        if type(path) in (str,):
             image = utils.load_image(path)
         else:
             image = path
@@ -590,7 +590,7 @@ class DiceButtons(Widget):
                 but.connect_callback(cbf, MOUSEBUTTONUP, count)
                 self._butdict[count] = but
                 count += 1
-        except StandardError, info:
+        except Exception as info:
             self.logger.exception("Can't load dice images for buttons: %s" % info)
             self.logger.error('Disable the dice')
             self._current_but = self._butdict[1]

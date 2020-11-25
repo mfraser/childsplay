@@ -21,7 +21,7 @@ import pygame
 from pygame.constants import *
 import utils
 from SPConstants import *
-import logging 
+import logging
 import SPWidgets
 import Mail
 import os
@@ -111,7 +111,7 @@ class Debugscreen:
                                     length=150, fsize=fsize12, border=1)
         self.entries.append(self.name_te)
         # buttons
-        for label, func in self.buthash.items():
+        for label, func in list(self.buthash.items()):
             b = SPWidgets.Button(label, but_pos, fsize=16, padding=8, name=label)
             b.connect_callback(func, MOUSEBUTTONDOWN, label)
             self.buttons.append(b)
@@ -200,9 +200,9 @@ class Debugscreen:
         rc_hash['kind'] = kind
         
         cmd_list = []
-        print rc_hash
-        for k in rc_hash.keys():
-            for c, v in rc_hash[k].items():
+        print(rc_hash)
+        for k in list(rc_hash.keys()):
+            for c, v in list(rc_hash[k].items()):
                 cmd_list.append('--%s=%s' % (c,v))
         
         ppp = os.path.expanduser(os.path.join('~', '.schoolsplay.rc', 'post_pull'))
@@ -243,12 +243,12 @@ class Debugscreen:
             path = os.path.join(HOMEDIR, self.act_name + '.jpeg')
             pygame.image.save(scr, path)
             self.logger.info("Screenshot %s taken" % path)
-        except Exception, info:
+        except Exception as info:
             self.logger.error("Failed to make screenshot %s" % info)
             text = _("Failed to make screenshot %s") % info
             dlg = SPWidgets.Dialog(text, title="ERROR !")
             dlg.run()
-            raise utils.MyError, "failed to make a screenshot"
+            raise utils.MyError("failed to make a screenshot")
         return path
 
     def _get_entrydata(self):
@@ -296,16 +296,16 @@ class Debugscreen:
                       assigned=data['assigned'], milestone=data['milestone'], \
                       name=data['name'], \
                       logpath=logpath, imgpath=imgpath)
-        except Mail.SendmailError,err:
+        except Mail.SendmailError as err:
             self.activity_info_dialog(_("Failed to send the email. Error: %s") % err)
         return self.on_quit_clicked()
 
 if __name__ == '__main__':
     
-    import __builtin__
-    __builtin__.__dict__['_'] = lambda x:x
+    import builtins
+    builtins.__dict__['_'] = lambda x:x
     
-    import SPLogging
+    from . import SPLogging
     SPLogging.set_level('debug')
     SPLogging.start()
         
@@ -313,12 +313,12 @@ if __name__ == '__main__':
     from pygame.constants import *
     pygame.init()
     
-    from SPSpriteUtils import SPInit
-    from SPWidgets import Init
+    from .SPSpriteUtils import SPInit
+    from .SPWidgets import Init
     def cbf(sprite, event, data):
-        print 'cb called with sprite %s, event %s and data %s' % (sprite, event, data)
-        print 'sprite name: %s' % sprite.get_name()
-        print 'data is %s' % data
+        print('cb called with sprite %s, event %s and data %s' % (sprite, event, data))
+        print('sprite name: %s' % sprite.get_name())
+        print('data is %s' % data)
     
     scr = pygame.display.set_mode((800, 600))
     scr.fill(LIGHTSKYBLUE1)
@@ -340,7 +340,7 @@ if __name__ == '__main__':
                 if event.key == K_ESCAPE:
                     runloop = 0
                 elif event.key == K_F1:
-                    print "F1"
+                    print("F1")
                 
             result = actives.update(event)
             if result and result[0][1] == -2:

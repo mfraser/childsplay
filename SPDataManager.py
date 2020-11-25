@@ -21,6 +21,7 @@
 
 #create logger, logger was configured in SPLogging
 import logging
+import importlib
 module_logger = logging.getLogger("childsplay.SPDataManager")
 
 import atexit, os, sys, datetime
@@ -168,13 +169,13 @@ class DataManager:
     
     def _check_tables_uptodate(self):
         self.logger.debug("_check_tables_uptodate")
-        reload(SPHelpText)
+        importlib.reload(SPHelpText)
         modules = [x for x in os.listdir(ACTIVITYDATADIR) if '.py' in x and not '.pyc' in x]
         # check that all the activities are present in the activity_options table
         orm, session = self.get_orm('activity_options', 'user')
         if orm == None:
             self.logger.error("No activity_options ORM found, dbase corrupt")
-            raise MyError, "No activity_options ORM found, dbase corrupt"
+            raise MyError("No activity_options ORM found, dbase corrupt")
         for m in modules:
             m = m[:-3]
             query = session.query(orm)
@@ -206,17 +207,17 @@ class DataManager:
         session.close()
         # check for mandatory DT sequences
         orm, session = self.get_orm('dt_sequence', 'user')
-        query = session.query(orm).filter_by(target = u'demo').all()
+        query = session.query(orm).filter_by(target = 'demo').all()
         if len(query) != len(DEMO_DT):
             self.logger.info("demo dt target differs from hardcoded sequence, replacing it")
             session.query(orm).filter(orm.target == 'demo').delete()
             session.commit()
             for row in DEMO_DT:
                 session.add(orm(**row))
-        query = session.query(orm).filter_by(target = u'default').all()
+        query = session.query(orm).filter_by(target = 'default').all()
         if not query:
             self.logger.info("default dt target missing, adding a hardcoded sequence.")
-            session.query(orm).filter(orm.target == u'default').delete()
+            session.query(orm).filter(orm.target == 'default').delete()
             session.commit()
             for row in DEFAULT_DT:
                 session.add(orm(**row))
@@ -226,17 +227,17 @@ class DataManager:
         if not val or val != 'yes':
             # we also set two DT sequences once, user can remove them
             orm, session = self.get_orm('dt_sequence', 'user')
-            query = session.query(orm).filter_by(target = u'Easy').all()
+            query = session.query(orm).filter_by(target = 'Easy').all()
             if not query:
                 self.logger.info("First time Easy dt target missing, adding a hardcoded sequence.")
-                session.query(orm).filter(orm.target == u'Easy').delete()
+                session.query(orm).filter(orm.target == 'Easy').delete()
                 session.commit()
                 for row in EASY_DT:
                     session.add(orm(**row))
-            query = session.query(orm).filter_by(target = u'Hard').all()
+            query = session.query(orm).filter_by(target = 'Hard').all()
             if not query:
                 self.logger.info("First time Hard dt target missing, adding a hardcoded sequence.")
-                session.query(orm).filter(orm.target == u'Hard').delete()
+                session.query(orm).filter(orm.target == 'Hard').delete()
                 session.commit()
                 for row in HARD_DT:
                     session.add(orm(**row))
@@ -263,7 +264,7 @@ class DataManager:
             self.current_user = result[1]
             self._start_gdm_greeter()
         elif result[0] == 'quit':
-            raise StopmeException, 0
+            raise StopmeException(0)
         elif result[0] == 'controlpanel':
             self.COPxml = result[1]
             
@@ -356,7 +357,7 @@ class DataManager:
     
     def get_table_names(self):
         """Returns a list with the names (strings) of the SQL tables currently in use."""
-        tl = self.metadata_usersdb.tables.keys()
+        tl = list(self.metadata_usersdb.tables.keys())
         return tl
     
     def get_orm(self, tablename, dbase):
@@ -533,12 +534,12 @@ class RowMapper:
     
     def _get_start_time(self):
         """Used by the maincore"""
-        if self.coldata.has_key('start_time'):
+        if 'start_time' in self.coldata:
             return self.coldata['start_time']
         
     def _get_end_time(self):
         """Used by the maincore"""
-        if self.coldata.has_key('end_time'):
+        if 'end_time' in self.coldata:
             return self.coldata['end_time']
     
     def get_orm(self):

@@ -69,9 +69,9 @@ class PacKid:
                 
     def update(self,direc):
         Snd.waka.play()
-        apply(self.dir_dic[direc])
+        self.dir_dic[direc]
         return (self.row,self.col)
-        #print self.row,self.col,self.rect
+        print(self.row,self.col,self.rect)
        
     def _up(self):
         if self.img == self.pac_u_c:
@@ -114,8 +114,9 @@ class Memory:
         self.memory = {}
         self.stack = [None]* len(points)
         
-    def remember(self,(key,item)):
+    def remember(self, xxx_todo_changeme):
         #print key,item
+        (key,item) = xxx_todo_changeme
         self.memory[key] = item
         self.stack.insert(0,key)
         try:
@@ -124,7 +125,7 @@ class Memory:
             pass
             
     def recall(self,key):
-        if self.memory.has_key(key):
+        if key in self.memory:
             return self.memory[key] 
 
 class Letters(Memory):
@@ -466,7 +467,7 @@ class Activity:
         self.stopflag = None# used to stop the loop when not level 4
         self.score = 0
         self.letters_spots = []
-        self.gamelevels = range(4)
+        self.gamelevels = list(range(4))
         self.oldvolume = 0
     
     def __del__(self):
@@ -575,13 +576,13 @@ class Activity:
             wordlist = 'words-'+wordsloc
             if not os.path.exists(os.path.join(self.my_datadir,wordlist)):
                 raise IndexError
-        except IndexError,info:
+        except IndexError as info:
             self.logger.info("Can't find words for locale %s Using english for the words and sounds." % wordsloc)
             wordlist = 'words-en'
             wordsloc = 'en'
         try:
             items = utils.read_unicode_file(os.path.join(self.my_datadir,wordlist))
-        except IOError,info:
+        except IOError as info:
             self.logger.exception("can't open or read words file %s" % \
                                   os.path.join(self.my_datadir,wordlist))
             raise MyError
