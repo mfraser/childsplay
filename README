@@ -3,3 +3,5 @@ To start childsplay.
 Unpack the tarball.
 From inside the folder childsplay-* start childsplay like this:
 python childsplay.py
+
+Note that this a work in progress and only some of the games work.
